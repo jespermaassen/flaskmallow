@@ -4,8 +4,8 @@ from app.enums import *
 from flask import request, jsonify
 
 
-@app.route("/")
-def index():
+@app.route("/api")
+def api_home():
     """
     Placeholder function for documentation of the API
     """
