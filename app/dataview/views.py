@@ -3,7 +3,7 @@ from app import app, login_manager
 from app.models import *
 from app.enums import *
 from app.auth import *
-from flask import request, jsonify, render_template
+from flask import request, jsonify, render_template, session, redirect
 from flask_login import login_user, login_required, logout_user
 
 
@@ -30,20 +30,22 @@ def login():
 
         login_user(user)
 
+        if "next" in session:
+            return redirect(session["next"])
+
         return f"<h1>You are logged in as {current_user.username}"
 
     return render_template("login.html")
 
 
-@app.route("/login")
+@app.route("/logout")
 @login_required
-def logout(id):
+def logout():
     """
     Placeholder function for documentation of the API
     """
-    user = User.query.get(int(id))
-    logout_user(user)
-    return f"<h1>Logged out. {current_user.username}</h1>"
+    logout_user()
+    return f"<h1>Logged out.</h1>"
 
 
 @app.route("/dataview")

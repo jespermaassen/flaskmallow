@@ -18,6 +18,7 @@ db_uri = f"postgresql://{os.getenv('pg_username')}:{os.getenv('pg_password')}@{o
 app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = os.getenv("secret_key")
+app.config["USE_SESSION_FOR_NEXT"] = True
 
 login_manager = LoginManager(app)
 login_manager.login_view = "login"
