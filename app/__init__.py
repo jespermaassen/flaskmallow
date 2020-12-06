@@ -8,6 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_admin import Admin
+from flask_mail import Mail
 
 # Init app
 app = Flask(__name__)
@@ -20,6 +21,8 @@ app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = os.getenv("secret_key")
 app.config["USE_SESSION_FOR_NEXT"] = True
+app.config["CSRF_ENABLED"] = True
+app.config["USER_ENABLE_EMAIL"] = False
 
 
 login_manager = LoginManager(app)
@@ -30,6 +33,9 @@ db = SQLAlchemy(app)
 
 # Create admin
 admin = Admin(app, template_mode="bootstrap3")
+
+# Init Flask Mail
+mail = Mail(app)
 
 # Init Marshmallow
 ma = Marshmallow(app)

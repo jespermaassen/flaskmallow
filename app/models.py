@@ -1,9 +1,13 @@
-from app import db, ma, admin
-from app.enums import Ticker, ContractType, ContractStatus
-from marshmallow_enum import EnumField
 from datetime import datetime
+from app import app, db, ma, admin
+from app.enums import Ticker, ContractType, ContractStatus
 from flask_login import UserMixin
+from flask_admin.contrib.sqla import ModelView
+from flask_user import UserManager, UserMixin, SQLAlchemyAdapter
+from marshmallow_enum import EnumField
 from werkzeug.security import generate_password_hash
+
+# import email_validator
 
 
 class User(UserMixin, db.Model):
@@ -11,8 +15,10 @@ class User(UserMixin, db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True)
-    password = db.Column(db.String(100))
-    email = db.Column(db.String(50), unique=True)
+    password = db.Column(db.String(255), nullable=False, server_default="")
+    active = db.Column(db.Boolean(), nullable=False, server_default="0")
+    email = db.Column(db.String(255), unique=True)
+    confirmed_at = db.Column(db.DateTime())
     date_created = db.Column(db.DateTime(), default=datetime.utcnow)
 
     contracts = db.relationship("Contract", backref="users", lazy="dynamic")
@@ -55,9 +61,6 @@ class ContractSchema(ma.SQLAlchemyAutoSchema):
         model = Contract
 
 
-from flask_admin.contrib.sqla import ModelView
-
-
 class UserView(ModelView):
     column_display_pk = True
     inline_models = [Contract]
@@ -68,3 +71,6 @@ class UserView(ModelView):
 
 admin.add_view(UserView(User, db.session))
 admin.add_view(ModelView(Contract, db.session))
+
+db_adapter = SQLAlchemyAdapter(db, User)
+user_manager = UserManager(db_adapter, app)

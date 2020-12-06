@@ -4,7 +4,8 @@ from app.models import *
 from app.enums import *
 from app.auth import *
 from flask import request, jsonify, render_template, session, redirect
-from flask_login import login_user, login_required, logout_user
+from flask_login import login_user, logout_user
+from flask_user import login_required
 
 
 @app.route("/")
@@ -15,37 +16,12 @@ def home():
     return render_template("home.html")
 
 
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/login")
 def login():
     """
     Placeholder function for documentation of the API
     """
-
-    if request.method == "POST":
-        username = request.form["username"]
-        user = User.query.filter_by(username=username).first()
-
-        if not user:
-            return "User does not exist!"
-
-        login_user(user, remember=True)
-
-        if "next" in session and session.next is not None:
-            return redirect(session["next"])
-
-        return f"<h1>You are logged in as {current_user.username}"
-
-    return render_template("login.html")
-
-
-@app.route("/logout")
-@login_required
-def logout():
-    """
-    Placeholder function for documentation of the API
-    """
-    logout_user()
-    return f"<h1>Logged out.</h1>"
+    return render_template("tba.html")
 
 
 @app.route("/dataview")
