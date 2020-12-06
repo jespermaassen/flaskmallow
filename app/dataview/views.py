@@ -3,8 +3,7 @@ from app import app, login_manager
 from app.models import *
 from app.enums import *
 from app.auth import *
-from flask import request, jsonify, render_template, session, redirect
-from flask_login import login_user, logout_user
+from flask import render_template
 from flask_user import login_required
 
 
