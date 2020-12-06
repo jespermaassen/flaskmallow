@@ -1,5 +1,4 @@
-from sqlalchemy.sql.schema import Column
-from app import db, ma
+from app import db, ma, admin
 from app.enums import Ticker, ContractType
 from marshmallow_enum import EnumField
 from datetime import datetime
@@ -16,7 +15,7 @@ class User(UserMixin, db.Model):
 
     contracts = db.relationship("Contract", backref="users", lazy="dynamic")
 
-    def __str__(self):
+    def __repr__(self):
         return f"<User {self.username}>"
 
 
@@ -60,3 +59,9 @@ class ContractSchema(ma.SQLAlchemyAutoSchema):
 
     class Meta:
         model = Contract
+
+
+from flask_admin.contrib.sqla import ModelView
+
+admin.add_view(ModelView(User, db.session))
+admin.add_view(ModelView(Contract, db.session))
