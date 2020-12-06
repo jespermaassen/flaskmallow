@@ -35,14 +35,6 @@ class Contract(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 
-    def __init__(self, user_id, contract_type, market, size, entry_price, date_close):
-        self.user_id = user_id
-        self.contract_type = contract_type
-        self.market = market
-        self.size = size
-        self.entry_price = entry_price
-        self.date_close = date_close
-
     def __str__(self):
         return (
             f"<Contract {self.id} | {self.market} | {self.size} | {self.entry_price} >"
@@ -68,6 +60,7 @@ from flask_admin.contrib.sqla import ModelView
 
 class UserView(ModelView):
     column_display_pk = True
+    inline_models = [Contract]
 
     def _on_model_change(self, form, model, is_created):
         model.password = generate_password_hash(model.password, method="sha256")
