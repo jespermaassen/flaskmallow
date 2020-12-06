@@ -30,7 +30,7 @@ def login():
 
         login_user(user, remember=True)
 
-        if "next" in session:
+        if "next" in session and session.next is not None:
             return redirect(session["next"])
 
         return f"<h1>You are logged in as {current_user.username}"
