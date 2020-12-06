@@ -28,7 +28,7 @@ def login():
         if not user:
             return "User does not exist!"
 
-        login_user(user)
+        login_user(user, remember=True)
 
         if "next" in session:
             return redirect(session["next"])
