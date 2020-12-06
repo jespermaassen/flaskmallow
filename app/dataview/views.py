@@ -16,14 +16,6 @@ def home():
     return render_template("home.html")
 
 
-@app.route("/login")
-def login():
-    """
-    Placeholder function for documentation of the API
-    """
-    return render_template("tba.html")
-
-
 @app.route("/dataview")
 @login_required
 def dataview_home():

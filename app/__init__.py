@@ -23,6 +23,7 @@ app.config["SECRET_KEY"] = os.getenv("secret_key")
 app.config["USE_SESSION_FOR_NEXT"] = True
 app.config["CSRF_ENABLED"] = True
 app.config["USER_ENABLE_EMAIL"] = False
+app.config["USER_APP_NAME"] = "FlaskMallow"
 
 
 login_manager = LoginManager(app)
