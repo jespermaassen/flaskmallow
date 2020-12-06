@@ -1,8 +1,9 @@
 from app import db, ma, admin
-from app.enums import Ticker, ContractType
+from app.enums import Ticker, ContractType, ContractStatus
 from marshmallow_enum import EnumField
 from datetime import datetime
 from flask_login import UserMixin
+from werkzeug.security import generate_password_hash
 
 
 class User(UserMixin, db.Model):
@@ -10,6 +11,7 @@ class User(UserMixin, db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True)
+    password = db.Column(db.String(100))
     email = db.Column(db.String(50), unique=True)
     date_created = db.Column(db.DateTime(), default=datetime.utcnow)
 
@@ -28,7 +30,7 @@ class Contract(db.Model):
     entry_price = db.Column(db.Float(), nullable=False)
     date_open = db.Column(db.DateTime(), default=datetime.utcnow)
     date_close = db.Column(db.DateTime())
-    status = db.Column(db.String(100), default="OPEN")
+    status = db.Column(db.Enum(ContractStatus), default=ContractStatus["open"].value)
     trade_result = db.Column(db.Float(), nullable=True)
 
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
@@ -63,5 +65,13 @@ class ContractSchema(ma.SQLAlchemyAutoSchema):
 
 from flask_admin.contrib.sqla import ModelView
 
-admin.add_view(ModelView(User, db.session))
+
+class UserView(ModelView):
+    column_display_pk = True
+
+    def _on_model_change(self, form, model, is_created):
+        model.password = generate_password_hash(model.password, method="sha256")
+
+
+admin.add_view(UserView(User, db.session))
 admin.add_view(ModelView(Contract, db.session))
