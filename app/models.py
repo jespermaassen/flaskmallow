@@ -47,6 +47,11 @@ class Contract(db.Model):
         )
 
 
+class UserSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = User
+
+
 class ContractSchema(ma.SQLAlchemyAutoSchema):
     # De-serialize Enums with Marshmallow
     market = EnumField(Ticker)
