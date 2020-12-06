@@ -36,9 +36,10 @@ def add_contract():
 def get_contracts():
     """
     Gets all Contracts in the databse with GET request
+    With option to specifiy arguments to the query
     """
-    print(app.config)
-    all_contracts = Contract.query.all()
+    all_contracts = Contract.query.filter_by(**request.args.to_dict()).all()
+
     return jsonify(ContractSchema(many=True).dump(all_contracts))
 
 
