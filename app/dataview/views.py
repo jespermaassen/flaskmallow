@@ -1,7 +1,10 @@
-from app import app
+from flask_login.utils import login_required
+from app import app, login_manager
 from app.models import *
 from app.enums import *
+from app.auth import *
 from flask import request, jsonify, render_template
+from flask_login import login_user, login_required, logout_user
 
 
 @app.route("/")
@@ -12,7 +15,39 @@ def home():
     return render_template("home.html")
 
 
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    """
+    Placeholder function for documentation of the API
+    """
+
+    if request.method == "POST":
+        username = request.form["username"]
+        user = User.query.filter_by(username=username).first()
+
+        if not user:
+            return "User does not exist!"
+
+        login_user(user)
+
+        return f"<h1>You are logged in as {current_user.username}"
+
+    return render_template("login.html")
+
+
+@app.route("/login")
+@login_required
+def logout(id):
+    """
+    Placeholder function for documentation of the API
+    """
+    user = User.query.get(int(id))
+    logout_user(user)
+    return f"<h1>Logged out. {current_user.username}</h1>"
+
+
 @app.route("/dataview")
+@login_required
 def dataview_home():
     """
     Placeholder function for documentation of the API
@@ -37,5 +72,5 @@ def display_users():
     """
     users = User.query.all()
     data = UserSchema(many=True).dump(users)
-    print(data)
+
     return render_template("display_users.html", users=data)

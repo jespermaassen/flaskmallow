@@ -6,7 +6,7 @@ from flask import Flask
 from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-
+from flask_login import LoginManager, UserMixin
 
 # Init app
 app = Flask(__name__)
@@ -19,6 +19,9 @@ app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = os.getenv("secret_key")
 
+login_manager = LoginManager(app)
+login_manager.login_view = "login"
+
 # Init Database
 db = SQLAlchemy(app)
 
@@ -29,4 +32,4 @@ ma = Marshmallow(app)
 migrate = Migrate(app, db)
 
 from app.api import views
-from app.exchange import views
+from app.dataview import views
