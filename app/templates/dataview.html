@@ -1,12 +1,8 @@
 {% extends 'base.html' %} {% block content %}
 
-<h1>Select data you want yo view</h1>
-<p>
-  <a href="{{ url_for('display_contracts') }}"><button>All Contracts</button></a>
-</p>
-
-<p>
-  <a href="{{ url_for('display_users') }}"><button>All Users</button></a>
-</p>
-
+<h1>Select data you want to view</h1>
+<a href="{{ url_for('display_contracts') }}"><button>All Contracts</button></a>
+<a href="{{ url_for('display_users') }}"><button>All Users</button></a>
+<h1>Create a search query</h1>
+<p>Under Construction...</p>
 {% endblock %}
