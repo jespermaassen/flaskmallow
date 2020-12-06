@@ -1,7 +1,7 @@
 from app import app
 from app.models import *
 from app.enums import *
-from flask import request, jsonify
+from flask import request, jsonify, render_template
 
 
 @app.route("/api")
@@ -9,7 +9,7 @@ def api_home():
     """
     Placeholder function for documentation of the API
     """
-    return "<h1>API DOCUMENTATION</h1>"
+    return render_template("api.html")
 
 
 @app.route("/api/contracts", methods=["POST"])

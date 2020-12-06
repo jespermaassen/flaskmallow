@@ -5,14 +5,22 @@ from flask import request, jsonify, render_template
 
 
 @app.route("/")
-def exchange_home():
+def home():
     """
     Placeholder function for documentation of the API
     """
-    return render_template("exchange.html")
+    return render_template("home.html")
 
 
-@app.route("/contracts")
+@app.route("/dataview")
+def dataview_home():
+    """
+    Placeholder function for documentation of the API
+    """
+    return render_template("dataview.html")
+
+
+@app.route("/dataview/contracts")
 def display_contracts():
     """
     Placeholder function for documentation of the API
@@ -22,7 +30,7 @@ def display_contracts():
     return render_template("display_contracts.html", contracts=data)
 
 
-@app.route("/users")
+@app.route("/dataview/users")
 def display_users():
     """
     Placeholder function for documentation of the API
