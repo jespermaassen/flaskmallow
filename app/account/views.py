@@ -2,9 +2,8 @@ from flask_login.utils import login_required
 from app import app, login_manager
 from app.models import *
 from app.enums import *
-from app.auth import *
 from flask import render_template
-from flask_user import login_required
+from flask_user import login_required, roles_required, current_user
 
 
 @app.route("/")
@@ -15,26 +14,27 @@ def home():
     return render_template("home.html")
 
 
-@app.route("/dataview")
+@app.route("/account")
 @login_required
-def dataview_home():
+def account_home():
     """
     Placeholder function for documentation of the API
     """
-    return render_template("dataview.html")
+    return render_template("account.html")
 
 
-@app.route("/dataview/contracts")
+@app.route("/account/contracts")
+@login_required
 def display_contracts():
     """
     Placeholder function for documentation of the API
     """
-    contracts = Contract.query.all()
+    contracts = Contract.query.filter(Contract.user_id == current_user.id).all()
     data = ContractSchema(many=True).dump(contracts)
     return render_template("display_contracts.html", contracts=data)
 
 
-@app.route("/dataview/users")
+@app.route("/account/users")
 def display_users():
     """
     Placeholder function for documentation of the API

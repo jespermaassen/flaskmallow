@@ -7,8 +7,6 @@ from app.models import *
 from app.enums import *
 
 
-app.config.from_object(os.environ["APP_SETTINGS"])
-
 migrate = Migrate(app, db)
 manager = Manager(app)
 

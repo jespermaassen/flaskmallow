@@ -1,30 +1,54 @@
 from datetime import datetime
+
 from app import app, db, ma, admin
 from app.enums import Ticker, ContractType, ContractStatus
 from flask_login import UserMixin
 from flask_admin.contrib.sqla import ModelView
 from flask_user import UserManager, UserMixin, SQLAlchemyAdapter
 from marshmallow_enum import EnumField
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
-# import email_validator
-
-
-class User(UserMixin, db.Model):
+# Define the User data model. Make sure to add flask_user UserMixin!!
+class User(db.Model, UserMixin):
     __tablename__ = "users"
-
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), unique=True)
+
+    # User authentication information
+    username = db.Column(db.String(50), nullable=False, unique=True)
     password = db.Column(db.String(255), nullable=False, server_default="")
-    active = db.Column(db.Boolean(), nullable=False, server_default="0")
-    email = db.Column(db.String(255), unique=True)
+
+    # User email information
+    email = db.Column(db.String(255), nullable=True, unique=True)
     confirmed_at = db.Column(db.DateTime())
-    date_created = db.Column(db.DateTime(), default=datetime.utcnow)
+
+    # User information
+    active = db.Column("is_active", db.Boolean(), nullable=False, server_default="0")
+    first_name = db.Column(db.String(100), nullable=False, server_default="")
+    last_name = db.Column(db.String(100), nullable=False, server_default="")
+
+    # Relationships
+    roles = db.relationship(
+        "Role", secondary="user_roles", backref=db.backref("users", lazy="dynamic")
+    )
 
     contracts = db.relationship("Contract", backref="users", lazy="dynamic")
 
     def __repr__(self):
         return f"<User {self.username}>"
+
+
+# Define the Role data model
+class Role(db.Model):
+    __tablename__ = "roles"
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(50), unique=True)
+
+
+# Define the UserRoles data model
+class UserRoles(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column(db.Integer(), db.ForeignKey("users.id", ondelete="CASCADE"))
+    role_id = db.Column(db.Integer(), db.ForeignKey("roles.id", ondelete="CASCADE"))
 
 
 class Contract(db.Model):
@@ -69,8 +93,10 @@ class UserView(ModelView):
         model.password = generate_password_hash(model.password, method="sha256")
 
 
+# Add views to admin panel
 admin.add_view(UserView(User, db.session))
 admin.add_view(ModelView(Contract, db.session))
 
+# Init User management features in admin panel
 db_adapter = SQLAlchemyAdapter(db, User)
 user_manager = UserManager(db_adapter, app)

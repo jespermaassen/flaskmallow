@@ -12,6 +12,8 @@ from flask_mail import Mail
 
 # Init app
 app = Flask(__name__)
+
+# Set base-dir and load .env file
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(dotenv_path=f"{BASE_DIR}/../.env")
 
@@ -25,14 +27,14 @@ app.config["CSRF_ENABLED"] = True
 app.config["USER_ENABLE_EMAIL"] = False
 app.config["USER_APP_NAME"] = "FlaskMallow"
 
-
+# Init Login Manager
 login_manager = LoginManager(app)
 login_manager.login_view = "login"
 
 # Init Database
 db = SQLAlchemy(app)
 
-# Create admin
+# Init Admin
 admin = Admin(app, template_mode="bootstrap3")
 
 # Init Flask Mail
@@ -45,4 +47,4 @@ ma = Marshmallow(app)
 migrate = Migrate(app, db)
 
 from app.api import views
-from app.dataview import views
+from app.account import views
