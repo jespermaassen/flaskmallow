@@ -1,4 +1,3 @@
-from flask_login.utils import login_required
 from app import app, login_manager
 from app.models import *
 from app.enums import *
@@ -20,7 +19,7 @@ def account_home():
     """
     Placeholder function for documentation of the API
     """
-    return render_template("account.html")
+    return render_template("account.html", user=current_user)
 
 
 @app.route("/account/contracts")
@@ -32,14 +31,3 @@ def display_contracts():
     contracts = Contract.query.filter(Contract.user_id == current_user.id).all()
     data = ContractSchema(many=True).dump(contracts)
     return render_template("display_contracts.html", contracts=data)
-
-
-@app.route("/account/users")
-def display_users():
-    """
-    Placeholder function for documentation of the API
-    """
-    users = User.query.all()
-    data = UserSchema(many=True).dump(users)
-
-    return render_template("display_users.html", users=data)

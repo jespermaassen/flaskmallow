@@ -1,6 +1,5 @@
 {% extends 'base.html' %} {% block content %}
 
-<h1>Select data you want to view</h1>
+<h1>Hello, {{ user.username }}</h1>
 <a href="{{ url_for('display_contracts') }}"><button>All Contracts</button></a>
-<a href="{{ url_for('display_users') }}"><button>All Users</button></a>
 {% endblock %}

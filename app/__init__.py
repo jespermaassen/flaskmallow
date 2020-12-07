@@ -29,7 +29,6 @@ app.config["USER_APP_NAME"] = "FlaskMallow"
 
 # Init Login Manager
 login_manager = LoginManager(app)
-login_manager.login_view = "login"
 
 # Init Database
 db = SQLAlchemy(app)
@@ -48,3 +47,4 @@ migrate = Migrate(app, db)
 
 from app.api import views
 from app.account import views
+from app.exchange import views

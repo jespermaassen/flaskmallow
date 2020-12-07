@@ -8,7 +8,7 @@ from flask_user import UserManager, UserMixin, SQLAlchemyAdapter
 from marshmallow_enum import EnumField
 from werkzeug.security import generate_password_hash, check_password_hash
 
-# Define the User data model. Make sure to add flask_user UserMixin!!
+
 class User(db.Model, UserMixin):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
