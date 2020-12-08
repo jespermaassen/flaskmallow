@@ -1,4 +1,4 @@
-from app import app, login_manager
+from app import app
 from app.models import *
 from app.enums import *
 from flask import render_template
