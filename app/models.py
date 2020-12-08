@@ -37,14 +37,12 @@ class User(db.Model, UserMixin):
         return f"<User {self.username}>"
 
 
-# Define the Role data model
 class Role(db.Model):
     __tablename__ = "roles"
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(50), unique=True)
 
 
-# Define the UserRoles data model
 class UserRoles(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     user_id = db.Column(db.Integer(), db.ForeignKey("users.id", ondelete="CASCADE"))

@@ -8,7 +8,7 @@ from flask_user import login_required, roles_required, current_user
 @app.route("/")
 def home():
     """
-    Placeholder function for documentation of the API
+    Home Dir
     """
     return render_template("home.html")
 
@@ -17,7 +17,7 @@ def home():
 @login_required
 def account_home():
     """
-    Placeholder function for documentation of the API
+    Returns User's account page when logged in
     """
     return render_template("account.html", user=current_user)
 
@@ -26,7 +26,7 @@ def account_home():
 @login_required
 def display_contracts():
     """
-    Placeholder function for documentation of the API
+    Returns Contracts that user opened
     """
     contracts = Contract.query.filter(Contract.user_id == current_user.id).all()
     data = ContractSchema(many=True).dump(contracts)
