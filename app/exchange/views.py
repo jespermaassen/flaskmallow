@@ -12,3 +12,14 @@ def exchange_home():
     Returns homepage for the contract exchange
     """
     return render_template("exchange.html")
+
+
+# Business logic.
+
+# BASIC
+# Interface for current pricing (charts)
+# Users can open & close Contracts
+# When the contract is closed, the trade result is updated in the contract table
+
+# 2.0
+# Allow user to set custom expiry dates, stop-loss en take-profits
