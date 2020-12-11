@@ -26,7 +26,7 @@ class User(db.Model, UserMixin):
     last_name = db.Column(db.String(100), nullable=False, server_default="")
 
     # Starting funds
-    money = db.Column(db.Float(), default=100.0)
+    money = db.Column(db.Float(), default=1000.0)
 
     # Relationships
     roles = db.relationship(

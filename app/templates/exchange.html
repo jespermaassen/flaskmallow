@@ -24,7 +24,25 @@
         $.getJSON(
           "/open_contract_long",
           {
-            contractId: $('input[name="position_size"]').val(),
+            position_size: $('input[name="position_size"]').val(),
+          },
+          function (data) {
+            $("#result").text(data.result);
+            $("#contract-section").load(" #contract-section > *");
+          }
+        );
+        return false;
+      });
+    });
+  </script>
+
+<script type=text/javascript> 
+    $(function () {
+      $("a#open_contract_short").bind("click", function () {
+        $.getJSON(
+          "/open_contract_short",
+          {
+            position_size: $('input[name="position_size"]').val(),
           },
           function (data) {
             $("#result").text(data.result);
@@ -41,8 +59,10 @@
 <h3>Embedded Crypto Chart Here</h3>
 
 <form class="form-inline">
-    <input type="hidden" name="position_size" value=25.0 />
+    <label for="position_size">Position size</label>
+    <input type="number" name="position_size" min=0 max=1000 value=100 step=1/>
     <a href="#" id="open_contract_long"><button class="btc btn-default"><h3>Open Long Contract</h3></button></a>
+    <a href="#" id="open_contract_short"><button class="btc btn-default"><h3>Open Short Contract</h3></button></a>
   </form>
 
 <div id="contract-section">
@@ -54,6 +74,7 @@
         <div class="col">id</div>
         <div class="col">date</div>
         <div class="col">market</div>
+        <div class="col">type</div>
         <div class="col">size</div>
         <div class="col">entry price</div>
         <div class="col">status</div>
@@ -65,6 +86,7 @@
         <div class="col">{{contract.id}}</div>
         <div class="col">{{contract.date_open }}</div>
         <div class="col">{{contract.market}}</div>
+        <div class="col">{{contract.contract_type}}</div>
         <div class="col">{{contract.size}}</div>
         <div class="col">{{contract.entry_price}}</div>
         <div class="col">{{contract.status}}</div>
@@ -85,6 +107,7 @@
           <div class="col">id</div>
           <div class="col">date</div>
           <div class="col">market</div>
+          <div class="col">type</div>
           <div class="col">size</div>
           <div class="col">entry price</div>
           <div class="col">exit price</div>
@@ -100,6 +123,7 @@
           <div class="col">{{contract.id}}</div>
           <div class="col">{{contract.date_open }}</div>
           <div class="col">{{contract.market}}</div>
+          <div class="col">{{contract.contract_type}}</div>
           <div class="col">{{contract.size}}</div>
           <div class="col">{{contract.entry_price}}</div>
           <div class="col">{{contract.close_price}}</div>

@@ -41,9 +41,15 @@ def process():
 
     contract.close_price = cc.get_price(ASSET, CURRENCY)[ASSET][CURRENCY]
 
-    contract.trade_result_pct = (
-        contract.close_price - contract.entry_price
-    ) / contract.entry_price
+    if contract.contract_type.value == "long":
+        contract.trade_result_pct = (
+            contract.close_price - contract.entry_price
+        ) / contract.entry_price
+    elif contract.contract_type.value == "short":
+        contract.trade_result_pct = (
+            (contract.close_price - contract.entry_price) / contract.entry_price
+        ) * -1
+
     contract.trade_result_usd = contract.size * contract.trade_result_pct
     contract.status = "closed"
     contract.date_close = datetime.utcnow()
@@ -66,7 +72,31 @@ def open_contract_long():
     new_contract = Contract(
         contract_type=ContractType["long"].value,
         market="btc_usd",
-        size=25.0,
+        size=float(request.args.get("position_size")),
+        entry_price=cc.get_price(ASSET, CURRENCY)[ASSET][CURRENCY],
+        user_id=int(current_user.id),
+    )
+
+    # Update user's money
+    user = User.query.get(int(current_user.id))
+    user.money -= new_contract.size
+
+    db.session.add(new_contract)
+    db.session.commit()
+
+    return jsonify(result="Succesfully opened contract")
+
+
+@app.route("/open_contract_short", methods=["GET", "POST"])
+@login_required
+def open_contract_short():
+    CURRENCY = "USD"
+    ASSET = "BTC"
+
+    new_contract = Contract(
+        contract_type=ContractType["short"].value,
+        market="btc_usd",
+        size=float(request.args.get("position_size")),
         entry_price=cc.get_price(ASSET, CURRENCY)[ASSET][CURRENCY],
         user_id=int(current_user.id),
     )
