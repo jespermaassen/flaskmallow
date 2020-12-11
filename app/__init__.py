@@ -48,3 +48,4 @@ migrate = Migrate(app, db)
 from app.api import views
 from app.account import views
 from app.exchange import views
+from app.leaderboard import views
