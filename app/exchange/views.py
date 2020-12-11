@@ -27,13 +27,9 @@ def process():
 
     # Make sure the contracts belongs to the logged in user
     if contract.user_id != current_user.id:
-        print(
-            f"trying to close {contractId} does not belong to user_id {current_user.id}"
-        )
         return jsonify(result="Unauthorized")
 
     if contract.status.value != "open":
-        print(f"can only close contracts that are open")
         return jsonify(result="Contract is not open")
 
     ASSET = contract.market.split("_")[0].upper()
@@ -67,11 +63,11 @@ def process():
 @login_required
 def open_contract_long():
     CURRENCY = "USD"
-    ASSET = "BTC"
+    ASSET = request.args.get("market_ticker").split("_")[0].upper()
 
     new_contract = Contract(
         contract_type=ContractType["long"].value,
-        market="btc_usd",
+        market=request.args.get("market_ticker"),
         size=float(request.args.get("position_size")),
         entry_price=cc.get_price(ASSET, CURRENCY)[ASSET][CURRENCY],
         user_id=int(current_user.id),
@@ -91,11 +87,11 @@ def open_contract_long():
 @login_required
 def open_contract_short():
     CURRENCY = "USD"
-    ASSET = "BTC"
+    ASSET = request.args.get("market_ticker").split("_")[0].upper()
 
     new_contract = Contract(
         contract_type=ContractType["short"].value,
-        market="btc_usd",
+        market=request.args.get("market_ticker"),
         size=float(request.args.get("position_size")),
         entry_price=cc.get_price(ASSET, CURRENCY)[ASSET][CURRENCY],
         user_id=int(current_user.id),
@@ -119,4 +115,5 @@ def open_contract_short():
 # When the contract is closed, the trade result is updated in the contract table
 
 # 2.0
+# Leaderboard
 # Allow user to set custom expiry dates, stop-loss en take-profits

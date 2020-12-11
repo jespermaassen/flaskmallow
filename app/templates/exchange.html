@@ -25,6 +25,8 @@
           "/open_contract_long",
           {
             position_size: $('input[name="position_size"]').val(),
+						market_ticker: $( "#selectedmarket").val(),
+
           },
           function (data) {
             $("#result").text(data.result);
@@ -36,104 +38,150 @@
     });
   </script>
 
-<script type=text/javascript> 
+<script type=text/javascript>
     $(function () {
-      $("a#open_contract_short").bind("click", function () {
+        $("a#open_contract_short").bind("click", function () {
         $.getJSON(
-          "/open_contract_short",
-          {
+            "/open_contract_short",
+            {
             position_size: $('input[name="position_size"]').val(),
-          },
-          function (data) {
+						market_ticker: $( "#selectedmarket").val(),
+            },
+            function (data) {
             $("#result").text(data.result);
             $("#contract-section").load(" #contract-section > *");
-          }
+            }
         );
         return false;
-      });
+        });
     });
-  </script>
+  
+</script>
 
 <h1>Contract Exchange</h1>
-
-<h3>Embedded Crypto Chart Here</h3>
-
-<form class="form-inline">
-    <label for="position_size">Position size</label>
-    <input type="number" name="position_size" min=0 max=1000 value=100 step=1/>
-    <a href="#" id="open_contract_long"><button class="btc btn-default"><h3>Open Long Contract</h3></button></a>
-    <a href="#" id="open_contract_short"><button class="btc btn-default"><h3>Open Short Contract</h3></button></a>
+<!-- TradingView Widget BEGIN -->
+<div class="tradingview-widget-container">
+  <div id="tradingview_8c01e"></div>
+  <div class="tradingview-widget-copyright">
+    <a href="https://www.tradingview.com/symbols/BTCUSDT/?exchange=BINANCE" rel="noopener" target="_blank"
+      ><span class="blue-text">BTCUSDT Chart</span></a
+    >
+    by TradingView
+  </div>
+  <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+  <script type="text/javascript">
+    new TradingView.widget({
+      width: 980,
+      height: 610,
+      symbol: "BINANCE:BTCUSDT",
+      interval: "60",
+      timezone: "Etc/UTC",
+      theme: "light",
+      style: "1",
+      locale: "en",
+      toolbar_bg: "#f1f3f6",
+      enable_publishing: false,
+      allow_symbol_change: true,
+      container_id: "tradingview_8c01e",
+    });
+  </script>
+</div>
+<!-- TradingView Widget END -->
+<div class="container-fluid">
+  <form class="d-flex justify-content-center align-items-center form-inline">
+    <label for="market">Market</label>
+    <select name="market" id="selectedmarket">
+      <option value="btc_usd">BTC</option>
+      <option value="eth_usd">ETH</option>
+      <option value="xrp_usd">XRP</option>
+      <option value="ltc_usd">LTC</option>
+    </select>
+    <label for="position_size">Amount</label>
+    <input type="number" name="position_size" min="0" max="1000" value="100" step="1" />
   </form>
+</div>
+<div class="container-fluid">
+  <div class="d-flex justify-content-center align-items-center">
+    <a href="#" id="open_contract_long">
+			<button class="btc btn-default">
+				<h4>Open Long Contract</h4>
+			</button>
+		</a>
+    <a href="#" id="open_contract_short">
+			<button class="btc btn-default">
+				<h4>Open Short Contract</h4>
+			</button>
+		</a>
+  </div>
+</div>
 
 <div id="contract-section">
+  <h1>Open Contracts</h1>
 
-    <h1>Open Contracts</h1>
-    
-    <div class="container-fluid">
-      <div class="row" style="width: 90%">
-        <div class="col">id</div>
-        <div class="col">date</div>
-        <div class="col">market</div>
-        <div class="col">type</div>
-        <div class="col">size</div>
-        <div class="col">entry price</div>
-        <div class="col">status</div>
-        <div class="col"></div>
-      </div>
-    
-      {% for contract in contracts %} {% if contract.status.value == 'open' %}
-      <div class="row" style="width: 90%">
-        <div class="col">{{contract.id}}</div>
-        <div class="col">{{contract.date_open }}</div>
-        <div class="col">{{contract.market}}</div>
-        <div class="col">{{contract.contract_type}}</div>
-        <div class="col">{{contract.size}}</div>
-        <div class="col">{{contract.entry_price}}</div>
-        <div class="col">{{contract.status}}</div>
-        <div class="col">
-          <form class="form-inline">
-            <input type="hidden" name="contract" value="{{contract.id}}" />
-            <a href="#" id="close_contract"><button class="btc btn-default">Close Contract</button></a>
-          </form>
-        </div>
-      </div>
-      {% endif %} {% endfor %}
+  <div class="container-fluid">
+    <div class="row" style="width: 90%">
+      <div class="col">id</div>
+      <div class="col">date</div>
+      <div class="col">market</div>
+      <div class="col">type</div>
+      <div class="col">size</div>
+      <div class="col">entry price</div>
+      <div class="col">status</div>
+      <div class="col"></div>
     </div>
-    
-    <h1>Closed Contracts</h1>
-    
-    <div class="container-fluid">
-        <div class="row" style="width: 90%">
-          <div class="col">id</div>
-          <div class="col">date</div>
-          <div class="col">market</div>
-          <div class="col">type</div>
-          <div class="col">size</div>
-          <div class="col">entry price</div>
-          <div class="col">exit price</div>
-          <div class="col">trade result %</div>
-          <div class="col">trade result USD</div>
-          <div class="col">status</div>
 
-          <div class="col"></div>
-        </div>
-      
-        {% for contract in contracts %} {% if contract.status.value == 'closed' %}
-        <div class="row" style="width: 90%">
-          <div class="col">{{contract.id}}</div>
-          <div class="col">{{contract.date_open }}</div>
-          <div class="col">{{contract.market}}</div>
-          <div class="col">{{contract.contract_type}}</div>
-          <div class="col">{{contract.size}}</div>
-          <div class="col">{{contract.entry_price}}</div>
-          <div class="col">{{contract.close_price}}</div>
-          <div class="col">{{contract.trade_result_pct}}</div>
-          <div class="col">{{contract.trade_result_usd}}</div>
-          <div class="col">{{contract.status}}</div>
-        </div>
-        {% endif %} {% endfor %}
+    {% for contract in contracts %} {% if contract.status.value == 'open' %}
+    <div class="row" style="width: 90%">
+      <div class="col">{{contract.id}}</div>
+      <div class="col">{{contract.date_open }}</div>
+      <div class="col">{{contract.market}}</div>
+      <div class="col">{{contract.contract_type}}</div>
+      <div class="col">{{contract.size}}</div>
+      <div class="col">{{contract.entry_price}}</div>
+      <div class="col">{{contract.status}}</div>
+      <div class="col">
+        <form class="form-inline">
+          <input type="hidden" name="contract" value="{{contract.id}}" />
+          <a href="#" id="close_contract"><button class="btc btn-default">Close Contract</button></a>
+        </form>
       </div>
+    </div>
+    {% endif %} {% endfor %}
+  </div>
 
+  <h1>Closed Contracts</h1>
+
+  <div class="container-fluid">
+    <div class="row" style="width: 90%">
+      <div class="col">id</div>
+      <div class="col">date</div>
+      <div class="col">market</div>
+      <div class="col">type</div>
+      <div class="col">size</div>
+      <div class="col">entry price</div>
+      <div class="col">exit price</div>
+      <div class="col">trade result %</div>
+      <div class="col">trade result USD</div>
+      <div class="col">status</div>
+
+      <div class="col"></div>
+    </div>
+
+    {% for contract in contracts %} {% if contract.status.value == 'closed' %}
+    <div class="row" style="width: 90%">
+      <div class="col">{{contract.id}}</div>
+      <div class="col">{{contract.date_open }}</div>
+      <div class="col">{{contract.market}}</div>
+      <div class="col">{{contract.contract_type}}</div>
+      <div class="col">{{contract.size}}</div>
+      <div class="col">{{contract.entry_price}}</div>
+      <div class="col">{{contract.close_price}}</div>
+      <div class="col">{{contract.trade_result_pct}}</div>
+      <div class="col">{{contract.trade_result_usd}}</div>
+      <div class="col">{{contract.status}}</div>
+    </div>
+    {% endif %} {% endfor %}
+  </div>
 </div>
 
 {% endblock %}
