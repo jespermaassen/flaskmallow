@@ -1,5 +1,100 @@
 {% extends 'base.html' %} {% block content %}
 
+<script type=text/javascript> 
+  $(function () {
+    $("a#close_contract").bind("click", function () {
+      $.getJSON(
+        "/process",
+        {
+          contractId: $('input[name="contract"]').val(),
+        },
+        function (data) {
+          $("#result").text(data.result);
+          $("#contract-section").load(" #contract-section > *");
+        }
+      );
+      return false;
+    });
+  });
+</script>
+
 <h1>Contract Exchange</h1>
 
+<h3>Embedded Crypto Chart Here</h3>
+
+<div id="contract-section">
+
+    <h1>Open Contracts</h1>
+    
+    <div class="container-fluid">
+      <div class="row" style="width: 90%">
+        <div class="col">id</div>
+        <div class="col">date</div>
+        <div class="col">market</div>
+        <div class="col">size</div>
+        <div class="col">entry price</div>
+        <div class="col">status</div>
+        <div class="col"></div>
+      </div>
+    
+      {% for contract in contracts %} {% if contract.status.value == 'open' %}
+      <div class="row" style="width: 90%">
+        <div class="col">{{contract.id}}</div>
+        <div class="col">{{contract.date_open }}</div>
+        <div class="col">{{contract.market}}</div>
+        <div class="col">{{contract.size}}</div>
+        <div class="col">{{contract.entry_price}}</div>
+        <div class="col">{{contract.status}}</div>
+        <div class="col">
+          <form class="form-inline">
+            <input type="hidden" name="contract" value="{{contract.id}}" />
+            <a href="#" id="close_contract"><button class="btc btn-default">Close Contract</button></a>
+          </form>
+        </div>
+      </div>
+      {% endif %} {% endfor %}
+    </div>
+    
+    <h1>Closed Contracts</h1>
+    
+    <div class="container-fluid">
+        <div class="row" style="width: 90%">
+          <div class="col">id</div>
+          <div class="col">date</div>
+          <div class="col">market</div>
+          <div class="col">size</div>
+          <div class="col">entry price</div>
+          <div class="col">exit price</div>
+          <div class="col">trade result %</div>
+          <div class="col">trade result USD</div>
+          <div class="col">status</div>
+
+          <div class="col"></div>
+        </div>
+      
+        {% for contract in contracts %} {% if contract.status.value == 'closed' %}
+        <div class="row" style="width: 90%">
+          <div class="col">{{contract.id}}</div>
+          <div class="col">{{contract.date_open }}</div>
+          <div class="col">{{contract.market}}</div>
+          <div class="col">{{contract.size}}</div>
+          <div class="col">{{contract.entry_price}}</div>
+          <div class="col">{{contract.close_price}}</div>
+          <div class="col">{{contract.trade_result_pct}}</div>
+          <div class="col">{{contract.trade_result_usd}}</div>
+          <div class="col">{{contract.status}}</div>
+        </div>
+        {% endif %} {% endfor %}
+      </div>
+
+</div>
+
 {% endblock %}
+
+<!-- <div class="container">
+  <form class="form-inline">
+    <input type="hidden" name="contract" value="{{contract.id}}" />
+    <a href="#" id="close_contract"><button class="btc btn-default">Close Contract</button></a>
+  </form>
+  <p id="result"></p>
+</div> -->
