@@ -65,16 +65,24 @@ def open_contract_long():
     CURRENCY = "USD"
     ASSET = request.args.get("market_ticker").split("_")[0].upper()
 
+    user = User.query.get(int(current_user.id))
+    position_size = float(request.args.get("position_size"))
+    contract_Type = ContractType["long"].value
+    market_ticker = request.args.get("market_ticker")
+
+    if position_size > user.money:
+        print("Insufficient Funds")
+        return jsonify(result="Insufficient Funds")
+
     new_contract = Contract(
-        contract_type=ContractType["long"].value,
-        market=request.args.get("market_ticker"),
-        size=float(request.args.get("position_size")),
+        contract_type=contract_Type,
+        market=market_ticker,
+        size=position_size,
         entry_price=cc.get_price(ASSET, CURRENCY)[ASSET][CURRENCY],
         user_id=int(current_user.id),
     )
 
     # Update user's money
-    user = User.query.get(int(current_user.id))
     user.money -= new_contract.size
 
     db.session.add(new_contract)
@@ -89,14 +97,22 @@ def open_contract_short():
     CURRENCY = "USD"
     ASSET = request.args.get("market_ticker").split("_")[0].upper()
 
+    user = User.query.get(int(current_user.id))
+    position_size = float(request.args.get("position_size"))
+    contract_Type = ContractType["long"].value
+    market_ticker = request.args.get("market_ticker")
+
+    if position_size > user.money:
+        print("Insufficient Funds")
+        return jsonify(result="Insufficient Funds")
+
     new_contract = Contract(
-        contract_type=ContractType["short"].value,
-        market=request.args.get("market_ticker"),
-        size=float(request.args.get("position_size")),
+        contract_type=contract_Type,
+        market=market_ticker,
+        size=position_size,
         entry_price=cc.get_price(ASSET, CURRENCY)[ASSET][CURRENCY],
         user_id=int(current_user.id),
     )
-
     # Update user's money
     user = User.query.get(int(current_user.id))
     user.money -= new_contract.size

@@ -7,7 +7,6 @@ db.drop_all()
 db.create_all()
 
 # Bootstrap the database with data
-
 # Assets
 btc = Asset(ticker="btc_usd", asset_1="btc", asset_2="usd")
 eth = Asset(ticker="eth_usd", asset_1="eth", asset_2="usd")
@@ -39,7 +38,7 @@ herman = User(
 contract_01 = Contract(
     contract_type=ContractType["long"].value,
     market="btc_usd",
-    size=50.0,
+    size=10.0,
     entry_price=18200.00,
     user_id=1,
 )
@@ -47,7 +46,7 @@ contract_01 = Contract(
 contract_02 = Contract(
     contract_type=ContractType["long"].value,
     market="eth_usd",
-    size=250.0,
+    size=10.0,
     entry_price=550.00,
     user_id=1,
 )
@@ -55,7 +54,7 @@ contract_02 = Contract(
 contract_03 = Contract(
     contract_type=ContractType["long"].value,
     market="eth_usd",
-    size=66.0,
+    size=5.0,
     entry_price=550.50,
     user_id=2,
 )
