@@ -50,11 +50,35 @@ def process():
 
     # Update user's money
     user = User.query.get(int(contract.user_id))
-    user.money += contract.trade_result_usd
+    user.money += contract.trade_result_usd + contract.size
 
     db.session.commit()
 
     return jsonify(result="Succesfully closed contract")
+
+
+@app.route("/open_contract_long", methods=["GET", "POST"])
+@login_required
+def open_contract_long():
+    CURRENCY = "USD"
+    ASSET = "BTC"
+
+    new_contract = Contract(
+        contract_type=ContractType["long"].value,
+        market="btc_usd",
+        size=25.0,
+        entry_price=cc.get_price(ASSET, CURRENCY)[ASSET][CURRENCY],
+        user_id=int(current_user.id),
+    )
+
+    # Update user's money
+    user = User.query.get(int(current_user.id))
+    user.money -= new_contract.size
+
+    db.session.add(new_contract)
+    db.session.commit()
+
+    return jsonify(result="Succesfully opened contract")
 
 
 # Business logic.
