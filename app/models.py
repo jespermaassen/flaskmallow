@@ -64,7 +64,7 @@ class Contract(db.Model):
     close_price = db.Column(db.Float(), nullable=True)
     date_open = db.Column(db.DateTime(), default=datetime.utcnow)
     date_close = db.Column(db.DateTime())
-    status = db.Column(db.Enum(ContractStatus), default=ContractStatus["open"].value)
+    status = db.Column(db.Enum(ContractStatus), default=ContractStatus["open"])
     trade_result_usd = db.Column(db.Float(), nullable=True)
     trade_result_pct = db.Column(db.Float(), nullable=True)
 
@@ -93,6 +93,7 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
 class ContractSchema(ma.SQLAlchemyAutoSchema):
     # De-serialize Enums with Marshmallow
     contract_type = EnumField(ContractType)
+    status = EnumField(ContractStatus)
 
     class Meta:
         model = Contract

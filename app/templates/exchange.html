@@ -1,5 +1,6 @@
 {% extends 'base.html' %} {% block content %}
 
+<!-- Close Contract -->
 <script type=text/javascript> 
   $(function () {
     $("a#close_contract").bind("click", function () {
@@ -9,7 +10,6 @@
           contractId: $('input[name="contract"]').val(),
         },
         function (data) {
-          $("#result").text(data.result);
           $("#contract-section").load(" #contract-section > *");
         }
       );
@@ -18,26 +18,30 @@
   });
 </script>
 
+<!-- Open Long Contract -->
 <script type=text/javascript> 
     $(function () {
       $("a#open_contract_long").bind("click", function () {
-        $.getJSON(
-          "/open_contract_long",
-          {
-            position_size: $('input[name="position_size"]').val(),
-						market_ticker: $( "#selectedmarket").val(),
 
-          },
-          function (data) {
-            $("#result").text(data.result);
-            $("#contract-section").load(" #contract-section > *");
-          }
-        );
-        return false;
-      });
-    });
-  </script>
+        $.ajax({
+					url: "/api/contracts",
+					type: "POST",
+					data: {
+						"size": $('input[name="position_size"]').val(),
+						"market": $( "#selectedmarket").val(),
+						"contract_type": "long",	
+					},
+					dataType: 'json',
+					success: function (response) {
+						console.log(response);
+					}
+				});
+				return false
+			});
+    }); 
+</script>
 
+<!-- Open Short Contract -->
 <script type=text/javascript>
     $(function () {
         $("a#open_contract_short").bind("click", function () {
@@ -48,7 +52,6 @@
 						market_ticker: $( "#selectedmarket").val(),
             },
             function (data) {
-            $("#result").text(data.result);
             $("#contract-section").load(" #contract-section > *");
             }
         );
@@ -134,7 +137,7 @@
 			</thread>
 			
 			<tbody>
-			{% for contract in contracts %} {% if contract.status.value == 'open' %}
+			{% for contract in contracts %} {% if contract.status == 'open' %}
 				<tr >
 					<th class="align-middle">{{contract.id}}</th>
 					<td class="align-middle">{{contract.date_open }}</td>
@@ -176,7 +179,7 @@
 			</thread>
 			
 			<tbody>
-			{% for contract in contracts %} {% if contract.status.value == 'closed' %}
+			{% for contract in contracts %} {% if contract.status == 'closed' %}
 				<tr>
 					<th class="align-middle">{{contract.id}}</th>
 					<td class="align-middle">{{contract.date_open }}</td>
@@ -192,14 +195,6 @@
 				{% endif %} {% endfor %}
 			</tbody>
 			</table>
-  </div>
+	</div>
 
 {% endblock %}
-
-<!-- <div class="container">
-  <form class="form-inline">
-    <input type="hidden" name="contract" value="{{contract.id}}" />
-    <a href="#" id="close_contract"><button class="btc btn-default">Close Contract</button></a>
-  </form>
-  <p id="result"></p>
-</div> -->

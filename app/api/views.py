@@ -2,6 +2,8 @@ from app import app
 from app.models import *
 from app.enums import *
 from flask import request, jsonify, render_template
+from flask_user import login_required, current_user
+import cryptocompare as cc
 
 
 @app.route("/api")
@@ -13,23 +15,49 @@ def api_home():
 
 
 @app.route("/api/contracts", methods=["POST"])
+@login_required
 def add_contract():
     """
     Creates a single contract, adds it to the database over POST request
     """
-    new_contract = Contract(
-        user_id=request.json["user_id"],
-        entry_price=request.json["entry_price"],
-        contract_type=request.json["contract_type"],
-        market=request.json["market"],
-        size=request.json["size"],
-        date_close=request.json["date_close"],
-    )
 
-    db.session.add(new_contract)
-    db.session.commit()
+    action = request.form.get('action')
 
-    return ContractSchema().jsonify((new_contract))
+    if action == "open":
+        # Unpack the query
+        user = User.query.get(int(current_user.id))
+        size = float(request.form.get("size"))
+        contract_type = request.form.get("contract_type")
+        market_ticker = request.form.get("market")
+        asset = market_ticker.split("_")[0].upper()
+
+        # Check if user is trying to open position bigger than current capital
+        if size > user.money:
+            return jsonify({"message": "Insufficient funds."})
+
+        # Get current asset's price from CryptoCompare
+        entry_price = cc.get_price(asset, "USD")[asset]["USD"]
+
+        # Create new contract
+        new_contract = Contract(
+            user_id=current_user.id,
+            contract_type=contract_type,
+            market=market_ticker,
+            size=size,
+            entry_price=entry_price,
+        )
+
+        # Update user's money
+        user.money -= new_contract.size
+
+        # Commit the new contract to the database
+        db.session.add(new_contract)
+        db.session.commit()
+
+        return ContractSchema().jsonify((new_contract))
+
+    elif action == "close":
+        
 
 
 @app.route("/api/contracts", methods=["GET"])
@@ -90,3 +118,7 @@ def delete_contract(id):
     db.session.commit()
 
     return ContractSchema.jsonify(contract)
+
+
+def can_post_contract():
+    pass

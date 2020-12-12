@@ -16,47 +16,9 @@ def exchange_home():
     contracts = Contract.query.filter(Contract.user_id == current_user.id).all()
     data = ContractSchema(many=True).dump(contracts)
 
+    print(data)
+
     return render_template("exchange.html", contracts=data)
-
-
-@app.route("/close_contract", methods=["GET", "POST"])
-@login_required
-def close_contract():
-    contractId = request.args.get("contractId")
-    contract = Contract.query.get(int(contractId))
-
-    # Make sure the contracts belongs to the logged in user
-    if contract.user_id != current_user.id:
-        return jsonify(result="Unauthorized")
-
-    if contract.status.value != "open":
-        return jsonify(result="Contract is not open")
-
-    ASSET = contract.market.split("_")[0].upper()
-    CURRENCY = "USD"
-
-    contract.close_price = cc.get_price(ASSET, CURRENCY)[ASSET][CURRENCY]
-
-    if contract.contract_type.value == "long":
-        contract.trade_result_pct = (
-            contract.close_price - contract.entry_price
-        ) / contract.entry_price
-    elif contract.contract_type.value == "short":
-        contract.trade_result_pct = (
-            (contract.close_price - contract.entry_price) / contract.entry_price
-        ) * -1
-
-    contract.trade_result_usd = contract.size * contract.trade_result_pct
-    contract.status = "closed"
-    contract.date_close = datetime.utcnow()
-
-    # Update user's money
-    user = User.query.get(int(contract.user_id))
-    user.money += contract.trade_result_usd + contract.size
-
-    db.session.commit()
-
-    return jsonify(result="Succesfully closed contract")
 
 
 @app.route("/open_contract_long", methods=["GET", "POST"])
@@ -121,3 +83,43 @@ def open_contract_short():
     db.session.commit()
 
     return jsonify(result="Succesfully opened contract")
+
+
+@app.route("/close_contract", methods=["GET", "POST"])
+@login_required
+def close_contract():
+    contractId = request.args.get("contractId")
+    contract = Contract.query.get(int(contractId))
+
+    # Make sure the contracts belongs to the logged in user
+    if contract.user_id != current_user.id:
+        return jsonify(result="Unauthorized")
+
+    if contract.status.value != "open":
+        return jsonify(result="Contract is not open")
+
+    ASSET = contract.market.split("_")[0].upper()
+    CURRENCY = "USD"
+
+    contract.close_price = cc.get_price(ASSET, CURRENCY)[ASSET][CURRENCY]
+
+    if contract.contract_type.value == "long":
+        contract.trade_result_pct = (
+            contract.close_price - contract.entry_price
+        ) / contract.entry_price
+    elif contract.contract_type.value == "short":
+        contract.trade_result_pct = (
+            (contract.close_price - contract.entry_price) / contract.entry_price
+        ) * -1
+
+    contract.trade_result_usd = contract.size * contract.trade_result_pct
+    contract.status = "closed"
+    contract.date_close = datetime.utcnow()
+
+    # Update user's money
+    user = User.query.get(int(contract.user_id))
+    user.money += contract.trade_result_usd + contract.size
+
+    db.session.commit()
+
+    return jsonify(result="Succesfully closed contract")
