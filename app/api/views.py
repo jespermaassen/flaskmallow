@@ -14,7 +14,7 @@ def api_home():
     return render_template("api.html")
 
 
-@app.route("/api/contracts", methods=["GET", "POST"])
+@app.route("/api/contracts", methods=["POST"])
 @login_required
 def add_contract():
     """
@@ -22,7 +22,6 @@ def add_contract():
     """
 
     action = request.form.get("action")
-    print(action)
 
     if action == "open":
         # Unpack the query
