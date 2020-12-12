@@ -2,9 +2,7 @@ from app import app
 from app.models import *
 from app.enums import *
 from flask import render_template, jsonify, request
-from flask_user import login_required, roles_required, current_user
-import cryptocompare as cc
-from datetime import datetime
+from flask_user import login_required, current_user
 
 
 @app.route("/exchange")
