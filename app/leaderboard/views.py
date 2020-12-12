@@ -18,6 +18,5 @@ def leaderboard_home():
     for user in users:
         user.rank = i
         i += 1
-    print(users)
 
     return render_template("leaderboard.html", users=users)
