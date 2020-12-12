@@ -13,6 +13,11 @@ def leaderboard_home():
     Returns homepage for the contract exchange
     """
     users = User.query.order_by(User.money.desc()).all()
+
+    i = 1
+    for user in users:
+        user.rank = i
+        i += 1
     print(users)
 
     return render_template("leaderboard.html", users=users)

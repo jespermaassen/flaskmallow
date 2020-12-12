@@ -1,3 +1,26 @@
-{% extends 'base.html' %} {% block content %} {% for user in users %}
-<h1>{{user.username}} - {{ user.money }}</h1>
-{% endfor %} {% endblock %}
+{% extends 'base.html' %} {% block content %}
+
+<div class="container-fluid">
+  <div class="d-flex justify-content-center">
+    <table class="table" style="width: 60%">
+      <thread>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Username</th>
+          <th scope="col">Capital</th>
+        </tr>
+      </thread>
+
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <th class="align-middle">{{user.rank}}</th>
+          <td class="align-middle">{{user.username }}</td>
+          <td class="align-middle">{{user.money|round(2)}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

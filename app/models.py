@@ -44,6 +44,9 @@ class Role(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(50), unique=True)
 
+    def __repr__(self):
+        return f"{self.name}"
+
 
 class UserRoles(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
@@ -84,6 +87,7 @@ class Asset(db.Model):
 class UserSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = User
+        include_fk = True
 
 
 class ContractSchema(ma.SQLAlchemyAutoSchema):
