@@ -1,64 +1,74 @@
 {% extends 'base.html' %} {% block content %}
 
+
 <!-- Close Contract -->
 <script type=text/javascript> 
-  $(function () {
-    $("a#close_contract").bind("click", function () {
-      $.getJSON(
-        "/close_contract",
-        {
-          contractId: $('input[name="contract"]').val(),
-        },
-        function (data) {
-          $("#contract-section").load(" #contract-section > *");
+	$(function () {
+		$("a#close_contract").bind("click", function () {
+
+			$.ajax({
+				url: "/api/contracts",
+				type: "POST",
+				data: {
+					contractId: $('input[name="contract"]').val(),
+					action: "close"
+				},
+				dataType: 'json',
+				success: function (data) {
+            $("#contract-section").load(" #contract-section > *");
         }
-      );
-      return false;
-    });
-  });
+			});
+			return false
+		});
+	}); 
 </script>
 
 <!-- Open Long Contract -->
 <script type=text/javascript> 
-    $(function () {
-      $("a#open_contract_long").bind("click", function () {
+	$(function () {
+		$("a#open_contract_long").bind("click", function () {
 
-        $.ajax({
-					url: "/api/contracts",
-					type: "POST",
-					data: {
-						"size": $('input[name="position_size"]').val(),
-						"market": $( "#selectedmarket").val(),
-						"contract_type": "long",	
-					},
-					dataType: 'json',
-					success: function (response) {
-						console.log(response);
-					}
-				});
-				return false
+			$.ajax({
+				url: "/api/contracts",
+				type: "POST",
+				data: {
+					"size": $('input[name="position_size"]').val(),
+					"market": $( "#selectedmarket").val(),
+					"contract_type": "long",	
+					"action": "open"
+				},
+				dataType: 'json',
+				success: function (data) {
+            $("#contract-section").load(" #contract-section > *");
+        }
 			});
-    }); 
+			return false
+		});
+	}); 
 </script>
 
 <!-- Open Short Contract -->
-<script type=text/javascript>
-    $(function () {
-        $("a#open_contract_short").bind("click", function () {
-        $.getJSON(
-            "/open_contract_short",
-            {
-            position_size: $('input[name="position_size"]').val(),
-						market_ticker: $( "#selectedmarket").val(),
-            },
-            function (data) {
+<script type=text/javascript> 
+	$(function () {
+		$("a#open_contract_short").bind("click", function () {
+
+			$.ajax({
+				url: "/api/contracts",
+				type: "POST",
+				data: {
+					"size": $('input[name="position_size"]').val(),
+					"market": $( "#selectedmarket").val(),
+					"contract_type": "short",	
+					"action": "open"
+				},
+				dataType: 'json',
+				success: function (data) {
             $("#contract-section").load(" #contract-section > *");
-            }
-        );
-        return false;
-        });
-    });
-  
+        }
+			});
+			return false
+		});
+	}); 
 </script>
 
 <h1>Contract Exchange</h1>

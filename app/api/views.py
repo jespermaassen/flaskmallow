@@ -14,14 +14,15 @@ def api_home():
     return render_template("api.html")
 
 
-@app.route("/api/contracts", methods=["POST"])
+@app.route("/api/contracts", methods=["GET", "POST"])
 @login_required
 def add_contract():
     """
     Creates a single contract, adds it to the database over POST request
     """
 
-    action = request.form.get('action')
+    action = request.form.get("action")
+    print(action)
 
     if action == "open":
         # Unpack the query
@@ -57,7 +58,41 @@ def add_contract():
         return ContractSchema().jsonify((new_contract))
 
     elif action == "close":
-        
+        # Unpack the query
+        contract_id = request.form.get("contractId")
+
+        contract = Contract.query.get(int(contract_id))
+        user = User.query.get(int(contract.user_id))
+        asset = contract.market.split("_")[0].upper()
+
+        # Check if user owns this contract
+        if contract.user_id != current_user.id:
+            return jsonify(result="Unauthorized")
+
+        # Check if contract is open
+        if contract.status.value != "open":
+            return jsonify(result="Contract is not open")
+
+        # Update the contract
+        contract.close_price = cc.get_price(asset, "USD")[asset]["USD"]
+        if contract.contract_type.value == "long":
+            contract.trade_result_pct = (
+                contract.close_price - contract.entry_price
+            ) / contract.entry_price
+        elif contract.contract_type.value == "short":
+            contract.trade_result_pct = (
+                (contract.close_price - contract.entry_price) / contract.entry_price
+            ) * -1
+        contract.trade_result_usd = contract.size * contract.trade_result_pct
+        contract.status = ContractStatus["closed"]
+        contract.date_close = datetime.utcnow()
+
+        # Update user's money
+        user.money += contract.trade_result_usd + contract.size
+
+        db.session.commit()
+
+        return ContractSchema().jsonify((contract))
 
 
 @app.route("/api/contracts", methods=["GET"])
