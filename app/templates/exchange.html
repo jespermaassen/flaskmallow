@@ -132,8 +132,8 @@
   <h1>Open Contracts</h1>
 
   <div class="container-fluid">
-		<table class='table'>
-			<thread>
+		<table class='table table-striped'>
+			<tread>
 				<tr>
 					<th scope="col">id</th>
 					<th scope="col">date</th>
@@ -144,7 +144,7 @@
 					<th scope="col">status</th>
 					<th scope="col"></th>
 				</tr>
-			</thread>
+			</tread>
 			
 			<tbody>
 			{% for contract in contracts %} {% if contract.status == 'open' %}
@@ -171,8 +171,8 @@
 	<h1>Closed Contracts</h1>
 	
 	<div class="container-fluid">
-		<table class='table'>
-			<thread>
+		<table class='table table-striped'>
+			<thead>
 				<tr>
 					<th scope="col">id</th>
 					<th scope="col">date</th>
@@ -186,7 +186,7 @@
 					<th scope="col">status</th>
 
 				</tr>
-			</thread>
+			</thead>
 			
 			<tbody>
 			{% for contract in contracts %} {% if contract.status == 'closed' %}
