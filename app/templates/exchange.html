@@ -4,7 +4,7 @@
   $(function () {
     $("a#close_contract").bind("click", function () {
       $.getJSON(
-        "/process",
+        "/close_contract",
         {
           contractId: $('input[name="contract"]').val(),
         },

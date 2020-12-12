@@ -19,9 +19,9 @@ def exchange_home():
     return render_template("exchange.html", contracts=data)
 
 
-@app.route("/process", methods=["GET", "POST"])
+@app.route("/close_contract", methods=["GET", "POST"])
 @login_required
-def process():
+def close_contract():
     contractId = request.args.get("contractId")
     contract = Contract.query.get(int(contractId))
 
@@ -121,15 +121,3 @@ def open_contract_short():
     db.session.commit()
 
     return jsonify(result="Succesfully opened contract")
-
-
-# Business logic.
-
-# BASIC
-# Interface for current pricing (charts)
-# Users can open & close Contracts
-# When the contract is closed, the trade result is updated in the contract table
-
-# 2.0
-# Leaderboard
-# Allow user to set custom expiry dates, stop-loss en take-profits
