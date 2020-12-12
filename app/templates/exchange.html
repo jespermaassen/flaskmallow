@@ -103,12 +103,12 @@
 <div class="container-fluid">
   <div class="d-flex justify-content-center align-items-center">
     <a href="#" id="open_contract_long">
-			<button class="btn btn-success">
+			<button class="btn btn-success m-2">
 				<h4>Open Long Contract</h4>
 			</button>
 		</a>
     <a href="#" id="open_contract_short">
-			<button class="btn btn-danger">
+			<button class="btn btn-danger m-2">
 				<h4>Open Short Contract</h4>
 			</button>
 		</a>
@@ -119,70 +119,80 @@
   <h1>Open Contracts</h1>
 
   <div class="container-fluid">
-    <div class="row" style="width: 90%">
-      <div class="col">id</div>
-      <div class="col">date</div>
-      <div class="col">market</div>
-      <div class="col">type</div>
-      <div class="col">size</div>
-      <div class="col">entry price</div>
-      <div class="col">status</div>
-      <div class="col"></div>
-    </div>
-
-    {% for contract in contracts %} {% if contract.status.value == 'open' %}
-    <div class="row" style="width: 90%">
-      <div class="col">{{contract.id}}</div>
-      <div class="col">{{contract.date_open }}</div>
-      <div class="col">{{contract.market}}</div>
-      <div class="col">{{contract.contract_type}}</div>
-      <div class="col">{{contract.size}}</div>
-      <div class="col">{{contract.entry_price}}</div>
-      <div class="col">{{contract.status}}</div>
-      <div class="col">
-        <form class="form-inline">
-          <input type="hidden" name="contract" value="{{contract.id}}" />
-          <a href="#" id="close_contract"><button class="btn btn-info">Close Contract</button></a>
-        </form>
-      </div>
-    </div>
-    {% endif %} {% endfor %}
+		<table class='table'>
+			<thread>
+				<tr>
+					<th scope="col">id</th>
+					<th scope="col">date</th>
+					<th scope="col">market</th>
+					<th scope="col">type</th>
+					<th scope="col">size</th>
+					<th scope="col">entry price</th>
+					<th scope="col">status</th>
+					<th scope="col"></th>
+				</tr>
+			</thread>
+			
+			<tbody>
+			{% for contract in contracts %} {% if contract.status.value == 'open' %}
+				<tr >
+					<th class="align-middle">{{contract.id}}</th>
+					<td class="align-middle">{{contract.date_open }}</td>
+					<td class="align-middle">{{contract.market}}</td>
+					<td class="align-middle">{{contract.contract_type}}</td>
+					<td class="align-middle">{{contract.size}}</td>
+					<td class="align-middle">{{contract.entry_price}}</td>
+					<td class="align-middle">{{contract.status}}</td>
+					<td>
+						<form class="form-inline">
+							<input type="hidden" name="contract" value="{{contract.id}}" />
+							<a href="#" id="close_contract"><button class="btn btn-info">Close</button></a>
+						</form>
+					</td>
+				</tr>
+				{% endif %} {% endfor %}
+			</tbody>
+			</table>
   </div>
 
-  <h1>Closed Contracts</h1>
+	<h1>Closed Contracts</h1>
+	
+	<div class="container-fluid">
+		<table class='table'>
+			<thread>
+				<tr>
+					<th scope="col">id</th>
+					<th scope="col">date</th>
+					<th scope="col">market</th>
+					<th scope="col">type</th>
+					<th scope="col">size</th>
+					<th scope="col">entry price</th>
+					<th scope="col">exit price</th>
+					<th scope="col">trade result %</th>
+					<th scope="col">trade result USD</th>
+					<th scope="col">status</th>
 
-  <div class="container-fluid">
-    <div class="row" style="width: 90%">
-      <div class="col">id</div>
-      <div class="col">date</div>
-      <div class="col">market</div>
-      <div class="col">type</div>
-      <div class="col">size</div>
-      <div class="col">entry price</div>
-      <div class="col">exit price</div>
-      <div class="col">trade result %</div>
-      <div class="col">trade result USD</div>
-      <div class="col">status</div>
-
-      <div class="col"></div>
-    </div>
-
-    {% for contract in contracts %} {% if contract.status.value == 'closed' %}
-    <div class="row" style="width: 90%">
-      <div class="col">{{contract.id}}</div>
-      <div class="col">{{contract.date_open }}</div>
-      <div class="col">{{contract.market}}</div>
-      <div class="col">{{contract.contract_type}}</div>
-      <div class="col">{{contract.size}}</div>
-      <div class="col">{{contract.entry_price}}</div>
-      <div class="col">{{contract.close_price}}</div>
-      <div class="col">{{contract.trade_result_pct}}</div>
-      <div class="col">{{contract.trade_result_usd}}</div>
-      <div class="col">{{contract.status}}</div>
-    </div>
-    {% endif %} {% endfor %}
+				</tr>
+			</thread>
+			
+			<tbody>
+			{% for contract in contracts %} {% if contract.status.value == 'closed' %}
+				<tr>
+					<th class="align-middle">{{contract.id}}</th>
+					<td class="align-middle">{{contract.date_open }}</td>
+					<td class="align-middle">{{contract.market}}</td>
+					<td class="align-middle">{{contract.contract_type}}</td>
+					<td class="align-middle">{{contract.size}}</td>
+					<td class="align-middle">{{contract.entry_price}}</td>
+					<td class="align-middle">{{contract.exit_price}}</td>
+					<td class="align-middle">{{contract.trade_result_pct|round(5)}}</td>
+					<td class="align-middle">{{contract.trade_result_usd|round(2)}}</td>
+					<td class="align-middle">{{contract.status}}</td>	
+				</tr>
+				{% endif %} {% endfor %}
+			</tbody>
+			</table>
   </div>
-</div>
 
 {% endblock %}
 
