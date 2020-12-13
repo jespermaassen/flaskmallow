@@ -134,8 +134,39 @@ def api_open_contract():
     )
 
 
-@app.route("/api/trade/close/<id>")
-def api_close_contract():
-    # Check if user is logged in and owns this contract
-    if current_user.id:
-        return jsonify(message="user is logged in")
+@app.route("/api/trade/close/<id>", methods=["POST"])
+@auth.login_required
+def api_close_contract(id):
+    # Unpack the query
+    contract = Contract.query.get(int(id))
+    user = User.query.get(int(contract.user_id))
+    asset = contract.market.split("_")[0].upper()
+
+    # Check if user owns this contract
+    if contract.user_id != auth.current_user():
+        return jsonify(message="Unauthorized")
+
+    # Check if contract is open
+    if contract.status.value != "open":
+        return jsonify(message="Contract is not open")
+
+    # Update the contract
+    contract.close_price = cc.get_price(asset, "USD")[asset]["USD"]
+    if contract.contract_type.value == "long":
+        contract.trade_result_pct = (
+            contract.close_price - contract.entry_price
+        ) / contract.entry_price
+    elif contract.contract_type.value == "short":
+        contract.trade_result_pct = (
+            (contract.close_price - contract.entry_price) / contract.entry_price
+        ) * -1
+    contract.trade_result_usd = contract.size * contract.trade_result_pct
+    contract.status = ContractStatus["closed"]
+    contract.date_close = datetime.utcnow()
+
+    # Update user's money
+    user.money += contract.trade_result_usd + contract.size
+
+    db.session.commit()
+
+    return jsonify(code=200, message="success", result=ContractSchema().dump(contract))
