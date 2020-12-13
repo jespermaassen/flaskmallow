@@ -2,11 +2,9 @@ from app import app
 from app.models import *
 from app.enums import *
 from flask import request, jsonify, render_template
-from flask_user import current_user
 from flask_user.passwords import verify_password as verify_cred
 import cryptocompare as cc
 from flask_httpauth import HTTPBasicAuth
-from pprint import pprint
 
 
 auth = HTTPBasicAuth()
