@@ -34,6 +34,15 @@ herman = User(
     last_name="Jansen",
 )
 
+john = User(
+    username="john",
+    password=hash_password(user_manager, "johnspassword"),
+    email="john@realmail.com",
+    first_name="John",
+    last_name="not John",
+    money=800,
+)
+
 # Contracts
 contract_01 = Contract(
     contract_type=ContractType["long"].value,
@@ -68,6 +77,7 @@ db.session.add(admin_role)
 db.session.add(user_role)
 db.session.add(jesper)
 db.session.add(herman)
+db.session.add(john)
 db.session.add(contract_01)
 db.session.add(contract_02)
 db.session.add(contract_03)
