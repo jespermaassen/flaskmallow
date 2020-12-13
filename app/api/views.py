@@ -28,7 +28,7 @@ def api_home():
 
 # Basic CRUD Endpoints
 @app.route("/api/contracts", methods=["GET"])
-@limiter.limit("1 per hour")
+@limiter.limit("1 per minute")
 def get_contracts():
     """
     Gets all Contracts in the databse with GET request
@@ -40,6 +40,7 @@ def get_contracts():
 
 
 @app.route("/api/contracts/<id>", methods=["GET"])
+@limiter.limit("1 per minute")
 def get_contract(id):
     """
     Gets a single Contract in the databse with GET request
@@ -53,6 +54,7 @@ def get_contract(id):
 
 
 @app.route("/api/contracts/<id>", methods=["PUT"])
+@limiter.limit("1 per minute")
 def update_contract(id):
     """
     Update a single Contract in the databse with PUT request
@@ -73,6 +75,7 @@ def update_contract(id):
 
 
 @app.route("/api/contracts/<id>", methods=["DELETE"])
+@limiter.limit("1 per minute")
 def delete_contract(id):
     """
     Delete a Single Contract in the databse with DELETE request
@@ -90,6 +93,7 @@ def delete_contract(id):
 
 # API Trading Endpoints
 @app.route("/api/trade/open", methods=["POST"])
+@limiter.limit("30 per minute")
 @auth.login_required
 def api_open_contract():
 
@@ -130,6 +134,7 @@ def api_open_contract():
 
 
 @app.route("/api/trade/close/<id>", methods=["POST"])
+@limiter.limit("30 per minute")
 @auth.login_required
 def api_close_contract(id):
     # Unpack the query
@@ -169,6 +174,7 @@ def api_close_contract(id):
 
 # Private Account endpoints
 @app.route("/api/account", methods=["GET"])
+@limiter.limit("30 per minute")
 @auth.login_required
 def api_account():
     user = User.query.get(int(auth.current_user()))
@@ -178,6 +184,7 @@ def api_account():
 
 
 @app.route("/api/account/contracts", methods=["GET"])
+@limiter.limit("30 per minute")
 @auth.login_required
 def api_user_contracts():
     user = User.query.get(int(auth.current_user()))
