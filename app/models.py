@@ -5,7 +5,6 @@ from flask_admin.contrib.sqla import ModelView
 from flask_user import UserManager, UserMixin, SQLAlchemyAdapter
 from flask_user.passwords import hash_password
 from marshmallow_enum import EnumField
-from werkzeug.security import generate_password_hash
 
 
 class User(db.Model, UserMixin):
