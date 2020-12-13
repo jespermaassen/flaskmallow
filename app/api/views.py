@@ -30,7 +30,7 @@ def api_home():
     return render_template("api.html")
 
 
-# BASIC CRUD OPERATIONS
+# Basic CRUD Endpoints
 @app.route("/api/contracts", methods=["GET"])
 def get_contracts():
     """
@@ -91,7 +91,7 @@ def delete_contract(id):
     return jsonify(ContractSchema().dump(contract))
 
 
-# TRADING THROUGH API
+# API Trading Endpoints
 @app.route("/api/trade/open", methods=["POST"])
 @auth.login_required
 def api_open_contract():
@@ -170,6 +170,7 @@ def api_close_contract(id):
     return jsonify(code=200, message="success", result=ContractSchema().dump(contract))
 
 
+# Private Account endpoints
 @app.route("/api/account", methods=["GET"])
 @auth.login_required
 def api_account():
