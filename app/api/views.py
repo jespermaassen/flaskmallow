@@ -1,13 +1,9 @@
-from app import app
+from app import app, auth, limiter
 from app.models import *
 from app.enums import *
 from flask import request, jsonify, render_template
 from flask_user.passwords import verify_password as verify_cred
 import cryptocompare as cc
-from flask_httpauth import HTTPBasicAuth
-
-
-auth = HTTPBasicAuth()
 
 
 @auth.verify_password
@@ -32,6 +28,7 @@ def api_home():
 
 # Basic CRUD Endpoints
 @app.route("/api/contracts", methods=["GET"])
+@limiter.limit("1 per hour")
 def get_contracts():
     """
     Gets all Contracts in the databse with GET request

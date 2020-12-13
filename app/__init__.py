@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 
-from flask import Flask
+from flask import Flask, jsonify
 
 from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy
@@ -9,6 +9,10 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_admin import Admin
 from flask_mail import Mail
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from flask.helpers import make_response
+from flask_httpauth import HTTPBasicAuth
 
 # Init app
 app = Flask(__name__)
@@ -41,6 +45,27 @@ mail = Mail(app)
 
 # Init Marshmallow
 ma = Marshmallow(app)
+
+# Init HTTPAuth
+auth = HTTPBasicAuth()
+
+# Init rate Limiter
+limiter = Limiter(
+    app, key_func=get_remote_address, default_limits=["500 per day", "60 per hour"]
+)
+
+# Override the 429 HTML response with a json one
+@app.errorhandler(429)
+def ratelimit_handler(e):
+    return make_response(
+        jsonify(
+            code=429,
+            message="Too Many Requests",
+            reason="ratelimit exceeded %s" % e.description,
+        ),
+        429,
+    )
+
 
 # Create Migration Manager
 migrate = Migrate(app, db)
