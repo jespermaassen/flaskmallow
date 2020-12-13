@@ -9,20 +9,28 @@
   <p></p>
 
   <h3>Error Codes</h3>
-  <p>- Any endpoint can return an ERROR. <br />Sample Payload below:</p>
+  <p>Any endpoint can return an error. <br />Sample Payload below:<br />
 
-  <code> {&quot;code&quot;: 1121, &quot;message&quot;, &quot;Insufficient Funds.&quot;} </code>
-
-  <p>Specific error codes and messages are defined in Error Codes < link</p>
-
+	<code> {&quot;code&quot;: 1121, &quot;message&quot;, &quot;Insufficient Funds.&quot;} </code>
+	</p>
   <h3>General Information on Endpoints</h3>
   <p>
     - For GET endpoints, parameters must be sent as a query string. <br />
     - For POST, PUT, and DELETE endpoints, the parameters may be sent as a query string or in the request body with
-    content type application/x-www-form-urlencoded.<br />
+    content type application/json.<br />
     You may mix parameters between both the query string and request body if you wish to do so.<br />
     - Parameters may be sent in any order.<br />
     - If a parameter is sent in both query string and request body, the query string parameter will be used.
+  </p>
+
+  <p>
+    <h3>Trade Execution Endpoints</h3>
+    xxx/api/trade/open<br />
+    xxx/api/trade/close< id ><br />
+    <br />
+    <h3>Private/Account Endpoints</h3>
+    xxx/api/account/<br />
+    xxx/api/account/contracts<br />
   </p>
 </div>
 {% endblock %}

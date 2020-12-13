@@ -24,6 +24,7 @@ jesper = User(
     email="jesper@realmail.com",
     first_name="Jesper",
     last_name="Maassen",
+    money=800,
 )
 
 herman = User(
@@ -32,6 +33,7 @@ herman = User(
     email="herman@realmail.com",
     first_name="Herman",
     last_name="Jansen",
+    money=995,
 )
 
 john = User(
@@ -47,7 +49,7 @@ john = User(
 contract_01 = Contract(
     contract_type=ContractType["long"].value,
     market="btc_usd",
-    size=10.0,
+    size=100.0,
     entry_price=18200.00,
     user_id=1,
 )
@@ -55,7 +57,7 @@ contract_01 = Contract(
 contract_02 = Contract(
     contract_type=ContractType["long"].value,
     market="eth_usd",
-    size=10.0,
+    size=100.0,
     entry_price=550.00,
     user_id=1,
 )

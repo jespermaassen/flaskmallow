@@ -168,3 +168,23 @@ def api_close_contract(id):
     db.session.commit()
 
     return jsonify(code=200, message="success", result=ContractSchema().dump(contract))
+
+
+@app.route("/api/account", methods=["GET"])
+@auth.login_required
+def api_account():
+    user = User.query.get(int(auth.current_user()))
+    data = {"id": user.id, "username": user.username, "capital": user.money}
+
+    return jsonify(code=200, message="succes", result=data)
+
+
+@app.route("/api/account/contracts", methods=["GET"])
+@auth.login_required
+def api_user_contracts():
+    user = User.query.get(int(auth.current_user()))
+    user_contracts = user.contracts.all()
+    user_contracts = ContractSchema(many=True).dump(user_contracts)
+    data = {"contracts": user_contracts}
+
+    return jsonify(code=200, message="succes", result=data)
