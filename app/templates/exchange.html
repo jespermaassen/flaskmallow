@@ -7,7 +7,7 @@
 		$("a#close_contract").bind("click", function () {
 
 			$.ajax({
-				url: "/api/contracts",
+				url: "/exchange/close",
 				type: "POST",
 				data: {
 					contractId: $('input[name="contract"]').val(),
@@ -29,7 +29,7 @@
 		$("a#open_contract_long").bind("click", function () {
 
 			$.ajax({
-				url: "/api/contracts",
+				url: "/exchange/open",
 				type: "POST",
 				data: {
 					"size": $('input[name="position_size"]').val(),
@@ -53,7 +53,7 @@
 		$("a#open_contract_short").bind("click", function () {
 
 			$.ajax({
-				url: "/api/contracts",
+				url: "/exchange/open",
 				type: "POST",
 				data: {
 					"size": $('input[name="position_size"]').val(),

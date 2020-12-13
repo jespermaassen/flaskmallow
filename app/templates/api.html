@@ -1,5 +1,28 @@
 {% extends 'base.html' %} {% block content %}
 
-<h1>API Documentation</h1>
+<div class="container-fluid">
+  <h1>API Documentation</h1>
 
+  <h3>To start trading contracts over the API please sign up.</h3>
+
+  <p>The base endpoint is: xxx/api</p>
+  <p></p>
+
+  <h3>Error Codes</h3>
+  <p>- Any endpoint can return an ERROR. <br />Sample Payload below:</p>
+
+  <code> {&quot;code&quot;: 1121, &quot;message&quot;, &quot;Insufficient Funds.&quot;} </code>
+
+  <p>Specific error codes and messages are defined in Error Codes < link</p>
+
+  <h3>General Information on Endpoints</h3>
+  <p>
+    - For GET endpoints, parameters must be sent as a query string. <br />
+    - For POST, PUT, and DELETE endpoints, the parameters may be sent as a query string or in the request body with
+    content type application/x-www-form-urlencoded.<br />
+    You may mix parameters between both the query string and request body if you wish to do so.<br />
+    - Parameters may be sent in any order.<br />
+    - If a parameter is sent in both query string and request body, the query string parameter will be used.
+  </p>
+</div>
 {% endblock %}
