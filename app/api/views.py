@@ -3,6 +3,7 @@ from app.models import *
 from app.enums import *
 from flask import request, jsonify, render_template
 from flask_user import login_required, current_user
+from flask_user.passwords import verify_password
 import cryptocompare as cc
 
 
@@ -14,11 +15,7 @@ def api_home():
     return render_template("api.html")
 
 
-@app.route("/api/trade")
-def api_open_contract():
-    return jsonify(message="this is a test")
-
-
+# BASIC CRUD OPERATIONS
 @app.route("/api/contracts", methods=["GET"])
 def get_contracts():
     """
@@ -79,5 +76,18 @@ def delete_contract(id):
     return ContractSchema.jsonify(contract)
 
 
-def can_post_contract():
-    pass
+# TRADING THROUGH API
+@app.route("/api/trade/open")
+def api_open_contract():
+    # Check if user is logged in and owns this contract
+    if hasattr(current_user, "id"):
+        return jsonify(message="user is logged in")
+    else:
+        return jsonify(message="user is NOT logged in")
+
+
+@app.route("/api/trade/close/<id>")
+def api_close_contract():
+    # Check if user is logged in and owns this contract
+    if current_user.id:
+        return jsonify(message="user is logged in")
