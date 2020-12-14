@@ -25,12 +25,16 @@
 
   <p>
     <h3>Trade Execution Endpoints</h3>
-    xxx/api/trade/open<br />
-    xxx/api/trade/close< id ><br />
+    <h5>These Endpoints require basic auth</h5>
+    /api/trade/open<br />
+      - arg: market [btc_usdt/eth_usdt]<br />
+      - arg: size [int]<br />
+      - arg: contract_type [long/short]<br />
+    /api/trade/close< id ><br />
     <br />
     <h3>Private/Account Endpoints</h3>
-    xxx/api/account/<br />
-    xxx/api/account/contracts<br />
+    /api/account/<br />
+    /api/account/contracts<br />
   </p>
 </div>
 {% endblock %}

@@ -110,7 +110,7 @@ def api_open_contract():
 
     # Check if user is trying to open position bigger than current capital
     if size > user.money:
-        return jsonify({"message": "Insufficient funds."})
+        return jsonify({"code": 1121, "message": "Insufficient funds."})
 
         # Get current asset's price from CryptoCompare
     entry_price = cc.get_price(asset, "USD")[asset]["USD"]
