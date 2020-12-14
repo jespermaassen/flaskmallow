@@ -9,6 +9,7 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_admin import Admin
 from flask_mail import Mail
+from flask_sijax import Sijax
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask.helpers import make_response
@@ -42,6 +43,9 @@ admin = Admin(app, template_mode="bootstrap3")
 
 # Init Flask Mail
 mail = Mail(app)
+
+# Init Sijax
+sijax = Sijax(app)
 
 # Init Marshmallow
 ma = Marshmallow(app)

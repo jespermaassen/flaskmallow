@@ -8,6 +8,9 @@ import cryptocompare as cc
 
 @auth.verify_password
 def verify_password(uname, pword):
+    """
+    Overwrite auth verifiy_password to use flask_user's hashing
+    """
 
     user = User.query.filter(User.username == uname).first()
     if not user:

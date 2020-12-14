@@ -1,6 +1,37 @@
 {% extends 'base.html' %} {% block content %}
 
-<h1>User Contracts</h1>
-{% for contract in contracts %}
-<p>{{contract}}</p>
-{% endfor %} {% endblock %}
+<div id="contract-section">
+  <h1>Contracts</h1>
+
+  <div class="container-fluid">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">id</th>
+          <th scope="col">date</th>
+          <th scope="col">market</th>
+          <th scope="col">type</th>
+          <th scope="col">size</th>
+          <th scope="col">entry price</th>
+          <th scope="col">status</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for contract in contracts %}
+        <tr>
+          <th class="align-middle">{{contract.id}}</th>
+          <td class="align-middle">{{contract.date_open }}</td>
+          <td class="align-middle">{{contract.market}}</td>
+          <td class="align-middle">{{contract.contract_type}}</td>
+          <td class="align-middle">{{contract.size}}</td>
+          <td class="align-middle">{{contract.entry_price}}</td>
+          <td class="align-middle">{{contract.status}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

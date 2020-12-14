@@ -1,75 +1,8 @@
 {% extends 'base.html' %} {% block content %}
-
-
-<!-- Close Contract -->
-<script type=text/javascript> 
-	$(function () {
-		$("a#close_contract").bind("click", function () {
-
-			$.ajax({
-				url: "/exchange/close",
-				type: "POST",
-				data: {
-					contractId: $('input[name="contract"]').val(),
-					action: "close"
-				},
-				dataType: 'json',
-				success: function (data) {
-            $("#contract-section").load(" #contract-section > *");
-        }
-			});
-			return false
-		});
-	}); 
-</script>
-
-<!-- Open Long Contract -->
-<script type=text/javascript> 
-	$(function () {
-		$("a#open_contract_long").bind("click", function () {
-
-			$.ajax({
-				url: "/exchange/open",
-				type: "POST",
-				data: {
-					"size": $('input[name="position_size"]').val(),
-					"market": $( "#selectedmarket").val(),
-					"contract_type": "long",	
-					"action": "open"
-				},
-				dataType: 'json',
-				success: function (data) {
-            $("#contract-section").load(" #contract-section > *");
-        }
-			});
-			return false
-		});
-	}); 
-</script>
-
-<!-- Open Short Contract -->
-<script type=text/javascript> 
-	$(function () {
-		$("a#open_contract_short").bind("click", function () {
-
-			$.ajax({
-				url: "/exchange/open",
-				type: "POST",
-				data: {
-					"size": $('input[name="position_size"]').val(),
-					"market": $( "#selectedmarket").val(),
-					"contract_type": "short",	
-					"action": "open"
-				},
-				dataType: 'json',
-				success: function (data) {
-            $("#contract-section").load(" #contract-section > *");
-        }
-			});
-			return false
-		});
-	}); 
-</script>
+<!-- Not sure yet why the scripts have to be loaded sepperately-->
+<script type="text/javascript" src="static/js/script.js"></script>
+<script type="text/javascript" src="static/js/close_contract.js"></script>
+<script type="text/javascript" src="static/js/open_contract_short.js"></script>
 
 <h1>Contract Exchange</h1>
 <!-- TradingView Widget BEGIN -->
@@ -109,22 +42,22 @@
       <option value="xrp_usd">XRP</option>
       <option value="ltc_usd">LTC</option>
     </select>
-    <label for="position_size"><div class=pos-label>Amount</div></label>
+    <label for="position_size"><div class="pos-label">Amount</div></label>
     <input type="number" name="position_size" min="0" max="1000" value="100" step="1" />
   </form>
 </div>
 <div class="container-fluid">
   <div class="d-flex justify-content-center align-items-center">
     <a href="#" id="open_contract_long">
-			<button class="btn btn-success m-2">
-				<h4>Open Long Contract</h4>
-			</button>
-		</a>
+      <button class="btn btn-success m-2">
+        <h4>Open Long Contract</h4>
+      </button>
+    </a>
     <a href="#" id="open_contract_short">
-			<button class="btn btn-danger m-2">
-				<h4>Open Short Contract</h4>
-			</button>
-		</a>
+      <button class="btn btn-danger m-2">
+        <h4>Open Short Contract</h4>
+      </button>
+    </a>
   </div>
 </div>
 
@@ -132,79 +65,79 @@
   <h1>Open Contracts</h1>
 
   <div class="container-fluid">
-		<table class='table table-striped'>
-			<thead>
-				<tr>
-					<th scope="col">id</th>
-					<th scope="col">date</th>
-					<th scope="col">market</th>
-					<th scope="col">type</th>
-					<th scope="col">size</th>
-					<th scope="col">entry price</th>
-					<th scope="col">status</th>
-					<th scope="col"></th>
-				</tr>
-			</thead>
-			
-			<tbody>
-			{% for contract in contracts %} {% if contract.status == 'open' %}
-				<tr >
-					<th class="align-middle">{{contract.id}}</th>
-					<td class="align-middle">{{contract.date_open }}</td>
-					<td class="align-middle">{{contract.market}}</td>
-					<td class="align-middle">{{contract.contract_type}}</td>
-					<td class="align-middle">{{contract.size}}</td>
-					<td class="align-middle">{{contract.entry_price}}</td>
-					<td class="align-middle">{{contract.status}}</td>
-					<td>
-						<form class="form-inline">
-							<input type="hidden" name="contract" value="{{contract.id}}" />
-							<a href="#" id="close_contract"><button class="btn btn-info">Close</button></a>
-						</form>
-					</td>
-				</tr>
-				{% endif %} {% endfor %}
-			</tbody>
-			</table>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">id</th>
+          <th scope="col">date</th>
+          <th scope="col">market</th>
+          <th scope="col">type</th>
+          <th scope="col">size</th>
+          <th scope="col">entry price</th>
+          <th scope="col">status</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for contract in contracts %} {% if contract.status == 'open' %}
+        <tr>
+          <th class="align-middle">{{contract.id}}</th>
+          <td class="align-middle">{{contract.date_open }}</td>
+          <td class="align-middle">{{contract.market}}</td>
+          <td class="align-middle">{{contract.contract_type}}</td>
+          <td class="align-middle">{{contract.size}}</td>
+          <td class="align-middle">{{contract.entry_price}}</td>
+          <td class="align-middle">{{contract.status}}</td>
+          <td>
+            <form class="form-inline">
+              <input type="hidden" name="contract" value="{{contract.id}}" />
+              <a href="#" id="close_contract"><button class="btn btn-info">Close</button></a>
+            </form>
+          </td>
+        </tr>
+        {% endif %} {% endfor %}
+      </tbody>
+    </table>
   </div>
 
-	<h1>Closed Contracts</h1>
-	
-	<div class="container-fluid">
-		<table class='table table-striped'>
-			<thead>
-				<tr>
-					<th scope="col">id</th>
-					<th scope="col">date</th>
-					<th scope="col">market</th>
-					<th scope="col">type</th>
-					<th scope="col">size</th>
-					<th scope="col">entry price</th>
-					<th scope="col">exit price</th>
-					<th scope="col">trade result %</th>
-					<th scope="col">trade result USD</th>
-					<th scope="col">status</th>
+  <h1>Closed Contracts</h1>
 
-				</tr>
-			</thead>
-			
-			<tbody>
-			{% for contract in contracts %} {% if contract.status == 'closed' %}
-				<tr>
-					<th class="align-middle">{{contract.id}}</th>
-					<td class="align-middle">{{contract.date_open }}</td>
-					<td class="align-middle">{{contract.market}}</td>
-					<td class="align-middle">{{contract.contract_type}}</td>
-					<td class="align-middle">{{contract.size}}</td>
-					<td class="align-middle">{{contract.entry_price}}</td>
-					<td class="align-middle">{{contract.close_price}}</td>
-					<td class="align-middle">{{contract.trade_result_pct|round(5)}}</td>
-					<td class="align-middle">{{contract.trade_result_usd|round(2)}}</td>
-					<td class="align-middle">{{contract.status}}</td>	
-				</tr>
-				{% endif %} {% endfor %}
-			</tbody>
-			</table>
-	</div>
+  <div class="container-fluid">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">id</th>
+          <th scope="col">date</th>
+          <th scope="col">market</th>
+          <th scope="col">type</th>
+          <th scope="col">size</th>
+          <th scope="col">entry price</th>
+          <th scope="col">exit price</th>
+          <th scope="col">trade result %</th>
+          <th scope="col">trade result USD</th>
+          <th scope="col">status</th>
+        </tr>
+      </thead>
 
-{% endblock %}
+      <tbody>
+        {% for contract in contracts %} {% if contract.status == 'closed' %}
+        <tr>
+          <th class="align-middle">{{contract.id}}</th>
+          <td class="align-middle">{{contract.date_open }}</td>
+          <td class="align-middle">{{contract.market}}</td>
+          <td class="align-middle">{{contract.contract_type}}</td>
+          <td class="align-middle">{{contract.size}}</td>
+          <td class="align-middle">{{contract.entry_price}}</td>
+          <td class="align-middle">{{contract.close_price}}</td>
+          <td class="align-middle">{{contract.trade_result_pct|round(5)}}</td>
+          <td class="align-middle">{{contract.trade_result_usd|round(2)}}</td>
+          <td class="align-middle">{{contract.status}}</td>
+        </tr>
+        {% endif %} {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% endblock %}
+</div>
